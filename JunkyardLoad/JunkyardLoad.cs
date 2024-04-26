@@ -116,7 +116,7 @@ namespace JunkyardLoad
         [FunctionName("dd-dotnet-security-aspnetcore")]
         public static async Task JunkyardSecuritySampleAspNetCore([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
         {
-            await JunkyardDump(SecurityAppUrlPrefix, log: log, service: SecurityService);
+            await JunkyardDump(SecurityAppUrlPrefix, log: log, service: SecurityService, endpointTestProfiles: JunkyardLoadTest.EndpointSecurityAspNetCoreProfiles);
         }
 
         private static DogStatsdService GetStatsService()
