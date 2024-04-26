@@ -174,7 +174,7 @@ public static class JunkyardLoadTest
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
                 BatchesPerRun = 10,
                 RequestsPerBatch = 2,
-                StatPrefix = "Array",
+                StatPrefix = "Iast",
                 Uri = "/iast/hardcodedSecrets"
             },
             new()
@@ -182,7 +182,7 @@ public static class JunkyardLoadTest
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
                 BatchesPerRun = 10,
                 RequestsPerBatch = 2,
-                StatPrefix = "Array",
+                StatPrefix = "Iast",
                 Uri = "/iast/weakhashing"
             },
             new()
