@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using Datadog.Metrics.Management;
 using Microsoft.Azure.WebJobs;
@@ -197,6 +199,7 @@ namespace JunkyardLoad
                                 }
                                 else
                                 {
+                                    await httpClient.PostAsync(profile.Uri, new StringContent(profile.Body, Encoding.UTF8, profile.ContentType ?? "application/json"));
                                 }
                             }
                         }));

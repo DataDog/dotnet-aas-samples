@@ -16,7 +16,7 @@ namespace JunkyardLoad
         public int BatchesPerRun { get; set; }
         public HttpMethod RequestMethod { get; set; } = HttpMethod.Get;
         public string? ContentType { get; internal set; }
-        public object? Body { get; internal set; }
+        public string? Body { get; internal set; }
         public Dictionary<string, string>? Headers { get; internal set; }
 
         public static EndpointTestProfile Home = new EndpointTestProfile()

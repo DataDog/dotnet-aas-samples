@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch:
 env:
   AZURE_FUNCTIONAPP_NAME: dd-aas-junkyard-load-v4
   AZURE_FUNCTIONAPP_PACKAGE_PATH: JunkyardLoad\published
