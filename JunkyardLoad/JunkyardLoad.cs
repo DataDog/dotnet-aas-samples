@@ -39,7 +39,6 @@ namespace JunkyardLoad
             await GetMetrics("dd-dotnet-linux-latest-build-stats", service: "net8-linux-latest-build-stats", log);
             await GetMetrics("dd-dotnet-linux-latest-build-profiler-default", service: "net8-linux-latest-build-profiler-default", log);
             await GetMetrics("dd-dotnet-linux-latest-build-profiler-all", service: "net8-linux-latest-build-profiler-all", log);
-            await GetMetrics("dd-dotnet-linux-latest-build-profiler-all", service: "net8-linux-latest-build-profiler-all", log);
             await GetMetrics(SecurityAppUrlPrefix, SecurityService, log);
         }
 
