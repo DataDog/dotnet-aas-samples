@@ -115,10 +115,11 @@ namespace JunkyardLoad
             await JunkyardDump("dd-dotnet-linux-latest-build-profiler-all", log: log, service: "net8-linux-latest-build-profiler-all");
         }
 
-        [FunctionName("dd-dotnet-security-aspnetcore")]
+        [FunctionName(SecurityAppUrlPrefix)]
         public static async Task JunkyardSecuritySampleAspNetCore([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
         {
-            await JunkyardDump(SecurityAppUrlPrefix, log: log, service: SecurityService, endpointTestProfiles: JunkyardLoadTest.EndpointSecurityAspNetCoreProfiles);
+            await JunkyardDump(SecurityAppUrlPrefix, log: log, service: SecurityService,
+                endpointTestProfiles: JunkyardLoadTest.EndpointSecurityAspNetCoreProfiles, traceHttpClient: false);
         }
 
         private static DogStatsdService GetStatsService()
@@ -134,7 +135,8 @@ namespace JunkyardLoad
             return _statsService;
         }
 
-        private static async Task JunkyardDump(string appUrlPrefix, ILogger log, string service, IEnumerable<EndpointTestProfile>? endpointTestProfiles = null)
+        private static async Task JunkyardDump(string appUrlPrefix, ILogger log, string service,
+            IEnumerable<EndpointTestProfile>? endpointTestProfiles = null, bool traceHttpClient = true)
         {
             var statsService = GetStatsService();
             var tags = new[] { $"app:{service ?? appUrlPrefix}", $"appUrlPrefix:{appUrlPrefix}" };
@@ -143,7 +145,7 @@ namespace JunkyardLoad
                 statsService.Increment($"{StatsPrefix}.function.call", tags: tags);
 
                 var allTasks = new List<Task>();
-                using var httpClient = GetClient(appUrlPrefix);
+                using var httpClient = GetClient(appUrlPrefix, traceHttpClient);
                 foreach (var endpointProfile in endpointTestProfiles ?? JunkyardLoadTest.EndpointProfiles)
                 {
                     allTasks.Add(RunEndpointProfile(httpClient, statsService, appUrlPrefix, endpointProfile, service));
@@ -218,7 +220,7 @@ namespace JunkyardLoad
             try
             {
                 var baseTags = new HashSet<string> { $"app:{service ?? appUrlPrefix}", $"appUrlPrefix:{appUrlPrefix}" };
-                using var httpClient = GetClient(appUrlPrefix);
+                using var httpClient = GetClient(appUrlPrefix, true);
                 var metricsResponse = await httpClient.GetAsync("/home/metrics").ConfigureAwait(false);
                 var metrics = await metricsResponse.Content.ReadAsAsync<List<FakeMetric>>();
                 foreach (var metric in metrics)
@@ -237,7 +239,7 @@ namespace JunkyardLoad
             }
         }
 
-        private static HttpClient GetClient(string app)
+        private static HttpClient GetClient(string app, bool traceHttpClient)
         {
             var uriText = $"https://{app}.azurewebsites.net/";
             var uri = new Uri(uriText);
@@ -251,6 +253,11 @@ namespace JunkyardLoad
             {
                 NoCache = true
             };
+
+            if (!traceHttpClient)
+            {
+                httpClient.DefaultRequestHeaders.Add("x-datadog-tracing-enabled", "false");
+            }
 
             return httpClient;
         }
