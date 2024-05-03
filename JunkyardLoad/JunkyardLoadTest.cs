@@ -12,19 +12,19 @@ public static class JunkyardLoadTest
             EndpointTestProfile.DapperRun
         };
 
-    public static List<EndpointTestProfile> EndpointSecurityAspNetCoreProfiles = new List<EndpointTestProfile>() {
+    public static List<EndpointTestProfile> EndpointSecurityAspNetCoreProfiles = new() {
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
-                RequestsPerBatch = 2,
+                BatchesPerRun = 1,
+                RequestsPerBatch = 1,
                 StatPrefix = "Home.Index",
                 Uri = "/",
             },
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Health.PathParams",
                 Uri = "/health/params/appscan_fingerprint",
@@ -32,7 +32,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Health.PathParams",
                 Uri = "/health/params/normal-id",
@@ -40,7 +40,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Health.Query",
                 Uri = "/health?[$slice]=value",
@@ -48,7 +48,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Health.Query",
                 Uri = "/health?normal=value",
@@ -56,7 +56,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Health.PathParamsQuery",
                 Uri = "/health/params/appscan_fingerprint?[$slice]=value",
@@ -64,7 +64,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Health.DiscoveryScans",
                 Uri = "/health/login.php",
@@ -72,7 +72,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Data.BodyForm",
                 ContentType = "application/x-www-form-urlencoded",
@@ -83,7 +83,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Data.BodyForm",
                 ContentType = "application/json",
@@ -94,7 +94,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 RequestMethod = System.Net.Http.HttpMethod.Post,
                 StatPrefix = "Data.RazorPage",
@@ -105,7 +105,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Home.LangHeader",
                 Uri = "/home/langheader",
@@ -113,7 +113,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Home.ExternalWafHeaders",
                 Uri = "/?test=external-waf-headers",
@@ -126,7 +126,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Login.Success",
                 Uri = "/account/index",
@@ -145,7 +145,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Login.Failure",
                 Uri = "/account/index",
@@ -156,7 +156,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Login.Sdk",
                 Uri = "/user/index"
@@ -164,7 +164,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Array",
                 Uri = "/dataapi/array?model=test&model=test2"
@@ -172,7 +172,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Iast",
                 Uri = "/iast/hardcodedSecrets"
@@ -180,15 +180,15 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
-                RequestsPerBatch = 2,
+                BatchesPerRun = 1,
+                RequestsPerBatch = 1,
                 StatPrefix = "Iast",
                 Uri = "/iast/weakhashing"
             },
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Iast",
                 Uri = "/Iast/SqlQuery?query=SELECT%20Surname%20from%20Persons%20where%20name%20=%20%27Vicent%27"
@@ -196,7 +196,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Iast",
                 Uri = "/Iast/ExecuteCommand?file=nonexisting.exe&argumentLine=arg1"
@@ -204,7 +204,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Iast",
                 Uri = "/Iast/GetFileContent?file=nonexisting.txt"
@@ -212,7 +212,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 RequestsPerBatch = 1,
                 StatPrefix = "Iast",
                 Uri = "/Iast/GetFileContent?file=nonexisting.txt"
@@ -220,7 +220,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 StatPrefix = "Iast",
                 RequestsPerBatch = 1,
                 RequestMethod = System.Net.Http.HttpMethod.Post,
@@ -230,7 +230,7 @@ public static class JunkyardLoadTest
             new()
             {
                 TimeBetweenBatches = TimeSpan.FromMilliseconds(100),
-                BatchesPerRun = 10,
+                BatchesPerRun = 1,
                 StatPrefix = "Iast",
                 RequestsPerBatch = 1,
                 Uri = "/Iast/GetDirectoryContent?directory=bin"

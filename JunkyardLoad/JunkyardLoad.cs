@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -39,8 +40,6 @@ namespace JunkyardLoad
             await GetMetrics("dd-dotnet-linux-latest-build-stats", service: "net8-linux-latest-build-stats", log);
             await GetMetrics("dd-dotnet-linux-latest-build-profiler-default", service: "net8-linux-latest-build-profiler-default", log);
             await GetMetrics("dd-dotnet-linux-latest-build-profiler-all", service: "net8-linux-latest-build-profiler-all", log);
-            await GetMetrics("dd-dotnet-linux-latest-build-profiler-all", service: "net8-linux-latest-build-profiler-all", log);
-            await GetMetrics(SecurityAppUrlPrefix, SecurityService, log);
         }
 
         [FunctionName("dd-netcore31-calltarget-full")]
@@ -115,10 +114,10 @@ namespace JunkyardLoad
             await JunkyardDump("dd-dotnet-linux-latest-build-profiler-all", log: log, service: "net8-linux-latest-build-profiler-all");
         }
 
-        [FunctionName("dd-dotnet-security-aspnetcore")]
+        [FunctionName(SecurityAppUrlPrefix)]
         public static async Task JunkyardSecuritySampleAspNetCore([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
         {
-            await JunkyardDump(SecurityAppUrlPrefix, log: log, service: SecurityService, endpointTestProfiles: JunkyardLoadTest.EndpointSecurityAspNetCoreProfiles);
+            await JunkyardDump(SecurityAppUrlPrefix, log: log, service: SecurityService, endpointTestProfiles: JunkyardLoadTest.EndpointSecurityAspNetCoreProfiles, traceHttpClient: false);
         }
 
         private static DogStatsdService GetStatsService()
@@ -134,7 +133,7 @@ namespace JunkyardLoad
             return _statsService;
         }
 
-        private static async Task JunkyardDump(string appUrlPrefix, ILogger log, string service, IEnumerable<EndpointTestProfile>? endpointTestProfiles = null)
+        private static async Task JunkyardDump(string appUrlPrefix, ILogger log, string service, IEnumerable<EndpointTestProfile>? endpointTestProfiles = null, bool traceHttpClient = true)
         {
             var statsService = GetStatsService();
             var tags = new[] { $"app:{service ?? appUrlPrefix}", $"appUrlPrefix:{appUrlPrefix}" };
@@ -146,7 +145,7 @@ namespace JunkyardLoad
                 using var httpClient = GetClient(appUrlPrefix);
                 foreach (var endpointProfile in endpointTestProfiles ?? JunkyardLoadTest.EndpointProfiles)
                 {
-                    allTasks.Add(RunEndpointProfile(httpClient, statsService, appUrlPrefix, endpointProfile, service));
+                    allTasks.Add(RunEndpointProfile(httpClient, statsService, appUrlPrefix, endpointProfile, service, traceHttpClient));
                 }
 
                 await Task.WhenAll(allTasks).ConfigureAwait(false);
@@ -165,10 +164,28 @@ namespace JunkyardLoad
             }
         }
 
-        private static async Task RunEndpointProfile(HttpClient httpClient, DogStatsdService statsService, string appUrlPrefix, EndpointTestProfile profile, string service)
+        private static async Task RunEndpointProfile(HttpClient httpClient, DogStatsdService statsService, string appUrlPrefix, EndpointTestProfile profile, string service, bool traceHttpClient = true)
         {
             var tags = new[] { $"app:{service ?? appUrlPrefix}", $"appUrlPrefix:{appUrlPrefix}" };
             var batches = profile.BatchesPerRun;
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+            {
+                NoCache = true
+            };
+            if (!traceHttpClient)
+            {
+                httpClient.DefaultRequestHeaders.Add("x-datadog-tracing-enabled", "false");
+            }
+
+            if (profile.Headers is not null)
+            {
+                foreach (var header in profile.Headers)
+                {
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+
             var allTasks = new List<Task>();
 
             while (batches-- > 0)
@@ -186,13 +203,6 @@ namespace JunkyardLoad
                             statsService.Increment($"{StatsPrefix}.{profile.StatPrefix}.count", tags: tags);
                             using (statsService.StartTimer($"{StatsPrefix}.{profile.StatPrefix}", tags: tags))
                             {
-                                if (profile.Headers is not null)
-                                {
-                                    foreach (var header in profile.Headers)
-                                    {
-                                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                                    }
-                                }
                                 if (profile.RequestMethod == HttpMethod.Get)
                                 {
                                     await httpClient.GetStringAsync(profile.Uri).ConfigureAwait(false);
@@ -242,14 +252,9 @@ namespace JunkyardLoad
             var uriText = $"https://{app}.azurewebsites.net/";
             var uri = new Uri(uriText);
 
-            var httpClient = new HttpClient()
+            var httpClient = new HttpClient
             {
                 BaseAddress = uri,
-            };
-
-            httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
-            {
-                NoCache = true
             };
 
             return httpClient;
