@@ -80,7 +80,7 @@ namespace JunkyardLoad
         }
 
         [FunctionName("dd-netcore31-junkyard-latest-build-data-pipeline")]
-        public static async Task JunkyardNetcore31DevProfilerOnly([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
+        public static async Task JunkyardNetcore31DevDataPipeline([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
         {
             await JunkyardDump("dd-dotnet-latest-data-pipeline", log: log, service: "netcore31-latest-build-data-pipeline");
         }
