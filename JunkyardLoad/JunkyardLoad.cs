@@ -35,6 +35,7 @@ namespace JunkyardLoad
             await GetMetrics("dd-dotnet-latest-build-stats", service: "netcore31-latest-build-stats", log);
             await GetMetrics("dd-netcore31-calltarget-full", service: "netcore31-calltarget-full", log);
             await GetMetrics("dd-dotnet-latest-build-profiler-only", service: "netcore31-latest-build-profiler-only", log);
+            await GetMetrics("dd-dotnet-latest-data-pipeline", service: "netcore31-latest-build-data-pipeline", log);
             await GetMetrics("dd-dotnet-linux-baseline", service: "net8-linux-baseline", log);
             await GetMetrics("dd-dotnet-linux-latest-build", service: "net8-linux-latest-build", log);
             await GetMetrics("dd-dotnet-linux-latest-build-stats", service: "net8-linux-latest-build-stats", log);
@@ -76,6 +77,12 @@ namespace JunkyardLoad
         public static async Task JunkyardNetcore31DevProfilerOnly([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
         {
             await JunkyardDump("dd-dotnet-latest-build-profiler-only", log: log, service: "netcore31-latest-build-profiler-only");
+        }
+
+        [FunctionName("dd-netcore31-junkyard-latest-build-data-pipeline")]
+        public static async Task JunkyardNetcore31DevProfilerOnly([TimerTrigger(LoadTestInterval)] TimerInfo myTimer, ILogger log)
+        {
+            await JunkyardDump("dd-dotnet-latest-data-pipeline", log: log, service: "netcore31-latest-build-data-pipeline");
         }
 
         [FunctionName("dd-dotnet-profiler-backend-test-latest-build")]
